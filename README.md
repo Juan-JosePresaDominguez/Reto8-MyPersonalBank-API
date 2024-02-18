@@ -1,4 +1,4 @@
-"# Reto7-Spring-Data" 
+"# Reto8-MyPersonalBank-API" 
 
 EQUIPO 2
 • Alexandru Maftei
@@ -15,7 +15,7 @@ Tú y tu equipo deberéis completar las historias no implementadas
 - Definir las reglas de las transacciones que apliquen en el proyecto.
 - Repositorio GitHub: Juan-JosePresaDominguez/Reto7-Spring-Data (github.com)
 
-PAUTAS RETO 7: Spring-Data
+PAUTAS RETO 8: MyPersonalBank-API
  - Trabajar historia a historia
 Persistencia:
 1. Genera el repositorio basado en JpaRepository

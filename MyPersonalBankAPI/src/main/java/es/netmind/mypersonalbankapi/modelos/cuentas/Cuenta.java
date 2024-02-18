@@ -1,5 +1,6 @@
 package es.netmind.mypersonalbankapi.modelos.cuentas;
 
+import es.netmind.mypersonalbankapi.modelos.clientes.Cliente;
 import lombok.*;
 
 import javax.persistence.*;
@@ -23,6 +24,11 @@ public abstract class Cuenta {
     private List<Transaccion> transacciones;
     private Double interes;
     private Double comision;
+
+    @ManyToOne(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
+    @JoinColumn(name = "cliente_id")
+    @ToString.Exclude   //Evitar bucles infinitos
+    private Cliente myCliente;
 
     /* CONSTRUCTOR */
     public Cuenta(Integer id, LocalDate fechaCreacion, Double saldo, Double interes, Double comision) {

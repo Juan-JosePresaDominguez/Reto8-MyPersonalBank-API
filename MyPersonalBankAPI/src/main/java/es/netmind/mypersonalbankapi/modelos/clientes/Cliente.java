@@ -27,7 +27,8 @@ public abstract class Cliente {
     private LocalDate alta;
     private boolean activo;
     private boolean moroso;
-    @Transient
+    //@Transient // Nuevo 18/02/2024
+    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "myCliente")
     private List<Cuenta> cuentas;
     //@Transient
     @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER, mappedBy = "myCliente")

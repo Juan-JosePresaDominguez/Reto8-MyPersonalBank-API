@@ -18,11 +18,11 @@ INSERT INTO cliente (dtype, id, activo, alta, direccion, email, moroso, nombre, 
 --('Corriente', 2, 0.2, '2023-11-07', 0.5, 200, 3),
 --('Ahorro', 3, 0.2, '2023-11-07', 1.1, 300, 2),
 --('Ahorro', 4, 0.2, '2023-11-07', 1.1, 300, 1);
-INSERT INTO cuenta (id, comision, fecha_creacion, interes, saldo) VALUES
-(1, 0.2, '2023-11-07', 1.1, 100),
-(2, 0.2, '2023-11-07', 0.5, 200),
-(3, 0.2, '2023-11-07', 1.1, 300),
-(4, 0.2, '2023-11-07', 1.1, 300);
+INSERT INTO cuenta (id, comision, fecha_creacion, interes, saldo, cliente_id) VALUES
+(1, 0.2, '2023-11-07', 1.1, 100, 1),
+(2, 0.2, '2023-11-07', 0.5, 200, 3),
+(3, 0.2, '2023-11-07', 1.1, 300, 2),
+(4, 0.2, '2023-11-07', 1.1, 300, 1);
 
 --
 -- Dumping data for table 'prestamo'
