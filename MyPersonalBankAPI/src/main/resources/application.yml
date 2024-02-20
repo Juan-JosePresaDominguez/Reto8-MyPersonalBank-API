@@ -27,7 +27,7 @@ spring:
 server.port: 9980
 
 ---
-# Acceso BB.DD. MySQL prod--> http://localhost:9943
+# Acceso BB.DD. MySQL prod--> http://localhost:9990
 #  spring.datasource.url=jdbc:mysql://localhost/personalapidb
 spring:
   config.activate.on-profile: prod

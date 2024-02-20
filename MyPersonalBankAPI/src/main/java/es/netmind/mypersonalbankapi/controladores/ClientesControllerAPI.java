@@ -7,16 +7,17 @@ import es.netmind.mypersonalbankapi.modelos.prestamos.Prestamo;
 import es.netmind.mypersonalbankapi.persistencia.*;
 import es.netmind.mypersonalbankapi.utils.ClientesUtils;
 import lombok.ToString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.List;
@@ -28,6 +29,8 @@ import java.util.List;
 //public class ClientesControllerAPI {
 public class ClientesControllerAPI implements IClientesController {
 
+    private static final Logger logger = LoggerFactory.getLogger(ClientesControllerAPI.class);
+
     //private IClientesRepo clientesRepo = ClientesInMemoryRepo.getInstance();
     //private IClientesRepo clientesRepo = ClientesDBRepo.getInstance();   // RETO 4 - SGBD
     @Autowired // Para el bean clientesRepo no hace falta porque ya está definido en RepoConfig.java ?
@@ -37,10 +40,22 @@ public class ClientesControllerAPI implements IClientesController {
     private IPrestamosRepo prestamosRepo = PrestamosInMemoryRepo.getInstance();
 
 
+    // Método GET
     @GetMapping("")
     public ResponseEntity<List<Cliente>> getClientes() throws Exception {
         return new ResponseEntity<>(clientesRepo.getAll(), HttpStatus.OK);
     }
+
+    // Método POST
+    @PostMapping("")
+    public ResponseEntity<Cliente> save(@RequestBody @Valid Cliente newProduct) {
+        logger.info("newProducto:" + newProduct);
+        return new ResponseEntity<>(clientesRepo.save(newProduct), HttpStatus.CREATED);
+    }
+
+    // Método PUT
+
+    // Método DELETE
 
     public void mostrarLista() throws Exception {
         System.out.println("\nLista de clientes:");
