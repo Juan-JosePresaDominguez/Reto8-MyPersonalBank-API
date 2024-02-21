@@ -13,7 +13,8 @@ import java.time.LocalDate;
 @ToString
 @Entity
 public class Personal extends Cliente {
-    @Pattern(regexp = "[0-9]{8}-[A-Z]{1}")   // 12345678
+
+    @Pattern(regexp = "[0-9]{8}[A-Z]{1}")   // 12345678X
     private String dni;
 
     public Personal(Integer id, String nombre, String email, String direccion, LocalDate alta, boolean activo, boolean moroso, String dni) throws Exception{

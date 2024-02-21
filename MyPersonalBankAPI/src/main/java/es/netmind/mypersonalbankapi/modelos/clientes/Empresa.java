@@ -14,8 +14,10 @@ import java.util.Arrays;
 @ToString
 @Entity
 public class Empresa extends Cliente {
-    @Pattern(regexp = "[0-9]{8}-[A-Z]{1}")   // 12345678
+
+    @Pattern(regexp = "[A-Z]{1}[0-9]{8}")   // X12345678
     private String cif;
+
     private String[] unidadesNegocio;
 
     public Empresa(Integer id, String nombre, String email, String direccion, LocalDate alta, boolean activo, boolean moroso, String cif, String[] unidadesNegocio) throws Exception{

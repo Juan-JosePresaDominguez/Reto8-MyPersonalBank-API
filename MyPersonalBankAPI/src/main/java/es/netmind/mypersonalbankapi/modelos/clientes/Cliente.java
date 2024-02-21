@@ -1,9 +1,6 @@
 package es.netmind.mypersonalbankapi.modelos.clientes;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import es.netmind.mypersonalbankapi.constraints.ValidDate;
 import es.netmind.mypersonalbankapi.modelos.cuentas.Cuenta;
 import es.netmind.mypersonalbankapi.modelos.prestamos.Prestamo;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -46,7 +43,7 @@ public abstract class Cliente {
     @Schema(name = "Cliente direccion", example = "caixa@c.com", required = true)
     private String direccion;
 
-    @ValidDate  // Anotación de Validación Personalizada
+    //@ValidDate  // Anotación de Validación Personalizada
     @Schema(name = "Cliente fecha de alta", example = "2024-02-21", required = true)
     private LocalDate alta;
 

@@ -3,6 +3,8 @@ package es.netmind.mypersonalbankapi.controladores;
 import es.netmind.mypersonalbankapi.exceptions.ClienteException;
 import es.netmind.mypersonalbankapi.exceptions.ClienteNotFoundException;
 import es.netmind.mypersonalbankapi.modelos.clientes.Cliente;
+import es.netmind.mypersonalbankapi.modelos.clientes.Empresa;
+import es.netmind.mypersonalbankapi.modelos.clientes.Personal;
 import es.netmind.mypersonalbankapi.modelos.prestamos.Prestamo;
 import es.netmind.mypersonalbankapi.persistencia.*;
 import es.netmind.mypersonalbankapi.utils.ClientesUtils;
@@ -130,13 +132,6 @@ public class ClientesController implements IClientesController {
         }
     }
 
-    public Cliente updateCliente(Integer id, Cliente cliente) throws ClienteNotFoundException {
-        Cliente newCliente = clientesRepo.findById(id).orElseThrow(() -> new ClienteNotFoundException(id));
-        newCliente.setNombre(cliente.getNombre());
-        newCliente.setEmail(cliente.getEmail());
-        return clientesRepo.save(newCliente);
-    }
-
     public void evaluarPrestamo(Integer uid, Double cantidad) {
         System.out.println("\nEvaluando préstamos de " + cantidad + " EUR para el  cliente: " + uid);
         System.out.println("───────────────────────────────────");
@@ -161,6 +156,34 @@ public class ClientesController implements IClientesController {
         }
 
 
+    }
+
+    @Override
+    public Personal updatePersonal(Integer id, Personal personal) throws ClienteNotFoundException {
+        Personal newPersonal = (Personal)clientesRepo.findById(id).orElseThrow(() -> new ClienteNotFoundException(id));
+        newPersonal.setNombre(personal.getNombre());
+        newPersonal.setEmail(personal.getEmail());
+        newPersonal.setDireccion(personal.getDireccion());
+        try {
+            newPersonal.setDni(personal.getDni());
+        } catch (Exception e) {
+            throw new ClienteNotFoundException("Cliente Personal con DNI: " + personal.getDni() + " no válido");
+        }
+        return clientesRepo.save(newPersonal);
+    }
+
+    @Override
+    public Empresa updateEmpresa(Integer id, Empresa empresa) throws ClienteNotFoundException {
+        Empresa newEmpresa = (Empresa)clientesRepo.findById(id).orElseThrow(() -> new ClienteNotFoundException(id));
+        newEmpresa.setNombre(empresa.getNombre());
+        newEmpresa.setEmail(empresa.getEmail());
+        newEmpresa.setDireccion(empresa.getDireccion());
+        try {
+            newEmpresa.setCif(empresa.getCif());
+        } catch (Exception e) {
+            throw new ClienteNotFoundException("Cliente Empresa con DNI: " + empresa.getCif() + " no válido");
+        }
+        return clientesRepo.save(newEmpresa);
     }
 
     public void setClientesRepo(IClientesRepoData clientesRepo) {

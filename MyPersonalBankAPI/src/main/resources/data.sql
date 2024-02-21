@@ -13,6 +13,11 @@ INSERT INTO cliente (dtype, activo, alta, direccion, email, moroso, nombre, cif,
 ('Personal', TRUE, '2023-11-07', 'Calle JJ 1', 'jj@j.com', FALSE, 'Juan Juanez', NULL, NULL, '12345678J'),
 ('Personal', TRUE, '2023-11-07', 'Calle LP 2', 'lp@l.com', FALSE, 'Luisa Perez', NULL, NULL, '12345678L'),
 ('Empresa', TRUE, '2023-11-07', 'Calle SI 3', 'si@s.com', FALSE, 'Servicios Informatico SL', 'J12345678', NULL, NULL);
+--INSERT INTO cliente (dtype, activo, alta, direccion, email, moroso, nombre) VALUES
+--('Personal', TRUE, '2023-11-07', 'Calle JJ 1', 'jj@j.com', FALSE, 'Juan Juanez'),
+--('Personal', TRUE, '2023-11-07', 'Calle LP 2', 'lp@l.com', FALSE, 'Luisa Perez'),
+--('Empresa', TRUE, '2023-11-07', 'Calle SI 3', 'si@s.com', FALSE, 'Servicios Informatico SL');
+
 
 --
 -- Dumping data for table 'cuenta'

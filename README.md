@@ -16,7 +16,22 @@ Tú y tu equipo deberéis:
 - Añadir las dependencias necesarias.
 - Implementar la capa de vista.
 
-PAUTAS RETO 8: MyPersonalBank-API
+PAUTAS RETO 8: MyPersonalBank-API (Spring-Boot)
+- Trabajar historia a historia
+*Se pueden reordenar las historias
+- Capa de vista:
+1. Definir la API recurso a recurso (rutas, verbos, status codes)
+	a. Sólo representación JSON
+2. Inhabilitar/vaciar los test de controler
+3. Implementar usando los controllers para los happy-path.
+	a. Si es necesario, añadir clases de servicio
+	b. Comprobar con RESTer
+	c. Genera recursos puros (@JsonIgnore). Evitar relaciones.
+4. Añadir gestión de excepciones y validación.
+5. Añadir dependencia swagger y documentar.
+6. Añadir HTTPS.
+
+RÚBRICAS DE CALIFICACIÓN RETO 8
 1. API Restful
 2. Spring Boot
 3. Implementación REST

@@ -1,8 +1,8 @@
 package es.netmind.mypersonalbankapi.controladores;
 
 import es.netmind.mypersonalbankapi.exceptions.ClienteNotFoundException;
-import es.netmind.mypersonalbankapi.modelos.clientes.Cliente;
-import es.netmind.mypersonalbankapi.persistencia.IClientesRepo;
+import es.netmind.mypersonalbankapi.modelos.clientes.Empresa;
+import es.netmind.mypersonalbankapi.modelos.clientes.Personal;
 
 public interface IClientesController {
     void mostrarLista() throws Exception;
@@ -13,5 +13,6 @@ public interface IClientesController {
     void actualizar(Integer uid, String[] args);
     void evaluarPrestamo(Integer uid, Double cantidad);
 
-    Cliente updateCliente(Integer id, Cliente cliente) throws ClienteNotFoundException;
+    Personal updatePersonal(Integer id, Personal personal) throws ClienteNotFoundException;
+    Empresa updateEmpresa(Integer id, Empresa empresa) throws ClienteNotFoundException;
 }

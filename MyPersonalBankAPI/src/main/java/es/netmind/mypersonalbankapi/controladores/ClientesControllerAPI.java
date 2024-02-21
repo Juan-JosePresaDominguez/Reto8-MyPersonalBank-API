@@ -2,16 +2,18 @@ package es.netmind.mypersonalbankapi.controladores;
 
 import es.netmind.mypersonalbankapi.exceptions.ClienteNotFoundException;
 import es.netmind.mypersonalbankapi.modelos.clientes.Cliente;
+import es.netmind.mypersonalbankapi.modelos.clientes.Empresa;
+import es.netmind.mypersonalbankapi.modelos.clientes.Personal;
 import es.netmind.mypersonalbankapi.persistencia.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +42,7 @@ import java.util.List;
 /* Como usuario del sistema, quiero poder modificar los datos de un cliente para mantenerlos      */
 /* actualizados.                                                                                  */
 /* Borrar cliente por Id                                                                          */
+
 /**************************************************************************************************/
 @RestController
 @RequestMapping("/clientes")
@@ -91,29 +94,54 @@ public class ClientesControllerAPI {
         }
     }
 
-    // Método POST (Crear Cliente 'save')       * NO FUNCIONA ?
-    @Operation(summary = "Create a new client", description = "Create a new client")
+    // Método POST (Crear Cliente Personal 'createPersonal')
+    @Operation(summary = "Create a new Personal client", description = "Create a new Personal client")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Created"),
             @ApiResponse(responseCode = "422", description = "Unprocessable Entity")
     })
-    @PostMapping(value = "", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<Cliente> save(@RequestBody @Valid Cliente newCliente) {
-        logger.info("newCliente:" + newCliente);
-        return new ResponseEntity<>(clientesRepo.save(newCliente), HttpStatus.CREATED);
+    @PostMapping(value = "/personal", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<Personal> createPersonal(@RequestBody @Valid Personal newPersonal) {
+        logger.info("newPersonal:" + newPersonal);
+        return new ResponseEntity<>(clientesRepo.save(newPersonal), HttpStatus.CREATED);
     }
 
-    // Método PUT (Actualizar Cuenta por ID y Cliente 'updateCliente'       * NO FUNCIONA ?
-    @Operation(summary = "Update a client by id", description = "Update a client selected by id")
+    // Método POST (Crear Cliente Empresa 'createEmpresa')
+    @Operation(summary = "Create a new Empresa client", description = "Create a new Empresa client")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Created"),
+            @ApiResponse(responseCode = "422", description = "Unprocessable Entity")
+    })
+    @PostMapping(value = "/empresa", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<Empresa> createEmpresa(@RequestBody @Valid Empresa newEmpresa) {
+        logger.info("newEmpresa:" + newEmpresa);
+        return new ResponseEntity<>(clientesRepo.save(newEmpresa), HttpStatus.CREATED);
+    }
+
+    // Método PUT (Actualizar Cliente Personal seleccionado por ID y Cliente 'updateCliente'
+    @Operation(summary = "Update a Personal client by id", description = "Update a Personal client selected by id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "202", description = "Accepted"),
     })
-    @PutMapping("/{id}")
-    public ResponseEntity<Cliente> update(
+    @PutMapping("/personal/{id}")
+    public ResponseEntity<Personal> update(
             @PathVariable @Min(1) Integer id,
-            @RequestBody Cliente cliente
+            @RequestBody Personal personal
     ) throws ClienteNotFoundException {
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(clientesController.updateCliente(id, cliente));
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(clientesController.updatePersonal(id, personal));
+    }
+
+    // Método PUT (Actualizar Cliente Empresa seleccionado por ID y Cliente 'updateCliente'
+    @Operation(summary = "Update a Empresa client by id", description = "Update a Empresa client selected by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "202", description = "Accepted"),
+    })
+    @PutMapping("/empresa/{id}")
+    public ResponseEntity<Empresa> update(
+            @PathVariable @Min(1) Integer id,
+            @RequestBody Empresa empresa
+    ) throws ClienteNotFoundException {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(clientesController.updateEmpresa(id, empresa));
     }
 
     // Método DELETE (Borrar Cuenta por ID 'delete')
@@ -127,10 +155,15 @@ public class ClientesControllerAPI {
             @Parameter(name = "id", description = "Cliente id", example = "1", required = true)
             @PathVariable @Min(1) Integer id
     ) {
-        //this.clientesRepo.deleteById(id); // HTTP 204 No Content
-        this.clientesController.eliminar(id); // HTTP 204 No Content
-        return ResponseEntity.noContent().build();
+        try {
+            this.clientesRepo.deleteById(id); // HTTP 204 No Content
+            //this.clientesController.eliminar(id); // HTTP 204 No Content
+            return ResponseEntity.noContent().build();
+        } catch (EmptyResultDataAccessException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // HTTP 404 Not Found
+        }
     }
+
 
     // Método DELETE (Borrar Todas las Cuentas 'deleteAll')
     @Operation(summary = "Delete all clients", description = "Removes all clients from the application")
