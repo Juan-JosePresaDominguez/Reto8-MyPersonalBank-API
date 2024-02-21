@@ -1,5 +1,5 @@
 spring:
-  application.name: AccountsService
+  application.name: MyPersonalBackAPI
   profiles.active: dev
   #profiles.active: prod
 
@@ -12,17 +12,26 @@ spring:
     url: "jdbc:h2:mem:personalapidb"
     driverClassName: org.h2.Driver
     username: sa
-    password: password
+    #password: password     # Deshabilitada para pruebas
   jpa:
     show-sql: true
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: create-drop
+      #ddl-auto: update  # Para no tener que cargar manualmente la BB.DD. en cada ejecución NO FUNCIONA
       generate-ddl: true
     defer-datasource-initialization: true
   h2:
     console.enabled: true
     console.path: /h2-bankAPI
+
+#debug: true
+logging:
+  #path: /var/tmp/
+  #file: /var/tmp/mylog.log
+  level:
+    #root: WARN
+    root: INFO
 
 server.port: 9980
 
@@ -46,4 +55,14 @@ spring:
       generate-ddl: true
     defer-datasource-initialization: true
 
-server.port: 9990
+server:
+  # Configurar HTTPS
+  port: 9443
+  ssl:
+    key-store: keystore.p12
+    key-store-password: pa55wrd
+    keyStoreType: PKCS12
+    keyAlias: tomcat
+
+security.require-ssl: true
+

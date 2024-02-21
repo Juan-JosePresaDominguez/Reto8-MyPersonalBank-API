@@ -1,10 +1,19 @@
 package es.netmind.mypersonalbankapi.modelos.clientes;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import es.netmind.mypersonalbankapi.constraints.ValidDate;
 import es.netmind.mypersonalbankapi.modelos.cuentas.Cuenta;
 import es.netmind.mypersonalbankapi.modelos.prestamos.Prestamo;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,28 +25,51 @@ import java.util.List;
 @ToString
 @Entity
 //@Table(name = "cliente")
+@Schema(name = "Cliente", description = "Modelo cliente")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Min(1)
+    @Schema(name = "Cliente ID", example = "1", required = false)
     private Integer id;
+
+    @NotBlank
+    @Size(min = 3, max = 30)
+    @Schema(name = "Cliente nombre", example = "Caixa Bank", required = true)
     private String nombre;
+
+    @Email
+    @Schema(name = "Cliente email", example = "caixa@c.com", required = true)
     private String email;
+
+    @Schema(name = "Cliente direccion", example = "caixa@c.com", required = true)
     private String direccion;
+
+    @ValidDate  // Anotación de Validación Personalizada
+    @Schema(name = "Cliente fecha de alta", example = "2024-02-21", required = true)
     private LocalDate alta;
+
+    @Schema(name = "Cliente activo", example = "true", required = true)
     private boolean activo;
+
+    @Schema(name = "Cliente activo", example = "false", required = true)
     private boolean moroso;
-    //@Transient // Nuevo 18/02/2024
-    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "myCliente")
+
+    @Transient
+    @JsonIgnore // Hace que no aparezca el campo anotado con @Transient en las peticiones RESTer
+    // Nuevo 20/02/2024
+    //@OneToMany(cascade = {CascadeType.ALL}, mappedBy = "myCliente")
+    @Schema(name = "Cliente cuentas", type = "List<Cuenta>", required = false)
     private List<Cuenta> cuentas;
     //@Transient
     @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER, mappedBy = "myCliente")
 //    @JoinColumn(name = "cliente_id")
 //    @ToString.Exclude   //Evitar bucles infinitos
+    @Schema(name = "Cliente prestamos", type = "List<Prestamo>", required = false)
     private List<Prestamo> prestamos;
 
     /* CONSTRUCTOR */
-
     public Cliente(Integer id, String nombre, String email, String direccion, LocalDate alta, boolean activo, boolean moroso) {
         this.id = id;
         this.nombre = nombre;

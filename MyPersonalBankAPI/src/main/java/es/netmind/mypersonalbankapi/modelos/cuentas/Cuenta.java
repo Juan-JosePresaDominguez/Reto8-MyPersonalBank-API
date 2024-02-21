@@ -13,22 +13,24 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@Entity
+//@Entity
 public abstract class Cuenta {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private LocalDate fechaCreacion;
     private Double saldo;
-    @Transient
+//    @Transient
     private List<Transaccion> transacciones;
     private Double interes;
     private Double comision;
 
-    @ManyToOne(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
-    @JoinColumn(name = "cliente_id")
-    @ToString.Exclude   //Evitar bucles infinitos
-    private Cliente myCliente;
+    // Nuevo 20/02/2024
+//    @ManyToOne(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
+//    @JoinColumn(name = "cliente_id")
+//    @ToString.Exclude   //Evitar bucles infinitos
+//    private Cliente myCliente;
+    // Nuevo 20/02/2024
 
     /* CONSTRUCTOR */
     public Cuenta(Integer id, LocalDate fechaCreacion, Double saldo, Double interes, Double comision) {
@@ -39,7 +41,7 @@ public abstract class Cuenta {
         this.comision = comision;
     }
 
-    /* LOGICA IMPORTANTE */
+    /* LÓGICA IMPORTANTE */
     public void aniadirTransaccion(Transaccion tr) {
         if (this.transacciones == null) this.transacciones = new ArrayList<>();
         if (tr.validar()) {

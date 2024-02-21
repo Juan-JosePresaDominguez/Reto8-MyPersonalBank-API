@@ -1,190 +1,146 @@
 package es.netmind.mypersonalbankapi.controladores;
 
-import es.netmind.mypersonalbankapi.exceptions.ClienteException;
 import es.netmind.mypersonalbankapi.exceptions.ClienteNotFoundException;
 import es.netmind.mypersonalbankapi.modelos.clientes.Cliente;
-import es.netmind.mypersonalbankapi.modelos.prestamos.Prestamo;
 import es.netmind.mypersonalbankapi.persistencia.*;
-import es.netmind.mypersonalbankapi.utils.ClientesUtils;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.time.DateTimeException;
-import java.time.LocalDate;
+import javax.validation.constraints.Min;
 import java.util.List;
 
-//@Component
+/**************************************************************************************************/
+/* DOCUMENTACIÓN SWAGGER: http://localhost:9980/swagger-ui/index.html                             */
+/* ~~~~~~~~~~~~~~~~~~~~~                                                                          */
+/* HISTORIA DE USUARIO 1                                                                          */
+/* Como usuario del sistema, quiero poder ver nuestra lista de clientes para tener una visión     */
+/* general de los mismos.                                                                         */
+/*                                                                                                */
+/* HISTORIA DE USUARIO 2                                                                          */
+/* Como usuario del sistema, quiero poder ver el detalle de un cliente para entender su perfil.   */
+/*                                                                                                */
+/* HISTORIA DE USUARIO 3                                                                          */
+/* Como usuario del sistema, quiero poder registrar nuevos clientes para poder incrementar        */
+/* nuestra base de datos.                                                                         */
+/*                                                                                                */
+/* HISTORIA DE USUARIO 4                                                                          */
+/* Como usuario del sistema, quiero poder modificar los datos de un cliente para mantenerlos      */
+/* actualizados.                                                                                  */
+/* Borrar cliente por Id                                                                          */
+/**************************************************************************************************/
 @RestController
 @RequestMapping("/clientes")
-@ToString
-//public class ClientesControllerAPI {
-public class ClientesControllerAPI implements IClientesController {
+@Validated
+@Tag(name = "MyPersonalBank API", description = "MyPersonalBankAPI - ClientesControllerAPI")
+public class ClientesControllerAPI {
 
     private static final Logger logger = LoggerFactory.getLogger(ClientesControllerAPI.class);
 
-    //private IClientesRepo clientesRepo = ClientesInMemoryRepo.getInstance();
-    //private IClientesRepo clientesRepo = ClientesDBRepo.getInstance();   // RETO 4 - SGBD
-    @Autowired // Para el bean clientesRepo no hace falta porque ya está definido en RepoConfig.java ?
-    //private IClientesRepo clientesRepo;         // RETO 5 - SPRING
-    private IClientesRepoData clientesRepo;       // RETO 7 - SPRING-DATA
+    @Autowired
+    private IClientesRepoData clientesRepo;         // RETO 8 - API REST
     private ICuentasRepo cuentasRepo = CuentasInMemoryRepo.getInstance();
     private IPrestamosRepo prestamosRepo = PrestamosInMemoryRepo.getInstance();
 
+    @Autowired
+    private IClientesController clientesController; // RETO 8 - API REST
 
-    // Método GET
-    @GetMapping("")
-    public ResponseEntity<List<Cliente>> getClientes() throws Exception {
-        return new ResponseEntity<>(clientesRepo.getAll(), HttpStatus.OK);
+    // Método GET (Obtener Clientes 'getClientes')
+    @Operation(summary = "Get all clients", description = "Returns all clients from the application")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved"),
+            @ApiResponse(responseCode = "404", description = "Not found - The client was not found")
+    })
+    @GetMapping(value = "", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public ResponseEntity<List<Cliente>> getClientes() throws ClienteNotFoundException {
+        List<Cliente> products = clientesRepo.findAll();
+        if (products != null && products.size() > 0)
+            return new ResponseEntity<>(clientesRepo.findAll(), HttpStatus.OK); // HTTP 200
+            //else return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        else
+            throw new ClienteNotFoundException("La lista de clientes está vacía"); // HTTP 404 + Excepción: La lista de clientes está vacía
     }
 
-    // Método POST
-    @PostMapping("")
-    public ResponseEntity<Cliente> save(@RequestBody @Valid Cliente newProduct) {
-        logger.info("newProducto:" + newProduct);
-        return new ResponseEntity<>(clientesRepo.save(newProduct), HttpStatus.CREATED);
-    }
-
-    // Método PUT
-
-    // Método DELETE
-
-    public void mostrarLista() throws Exception {
-        System.out.println("\nLista de clientes:");
-        System.out.println("───────────────────────────────────");
-        List<Cliente> clientes = clientesRepo.getAll();
-        for (Cliente cl : clientes) {
-
-            try {
-                cl.validar();
-                System.out.println("(" + cl.getId() + ") " + cl.getNombre() + " " + cl.getId());
-            } catch (ClienteException e) {
-                System.out.println("El cliente solicitado tiene datos erroneos 😞! Ponte en contacto con el admin. \nCode: " + e.getCode());
-            } catch (Exception e) {
-                System.out.println("Oops ha habido un problema, inténtelo más tarde 😞!");
-            }
-
-        }
-    }
-
-    public int numeroClientes() throws Exception {
-        return clientesRepo.getAll().size();
-    }
-
-    public void mostrarDetalle(Integer uid) {
-        System.out.println("\nDetalle de cliente: " + uid);
-        System.out.println("───────────────────────────────────");
-
+    // Método GET (Obtener Cliente por ID 'getCliente')
+    @Operation(summary = "Get a client by id", description = "Returns a client as per the id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved"),
+            @ApiResponse(responseCode = "404", description = "Not Found - The client was not found")
+    })
+    @GetMapping(value = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public ResponseEntity<Cliente> getCliente(
+            @Parameter(name = "id", description = "Cliente id", example = "1", required = true)
+            @PathVariable @Min(1) Integer id
+    ) throws Exception {
         try {
-            Cliente cl = clientesRepo.findById(uid).orElseThrow(()->new ClienteNotFoundException());
-            System.out.println(cl);
+            return ResponseEntity.status(HttpStatus.OK).body(clientesRepo.findClienteById(id));
         } catch (ClienteNotFoundException e) {
-            System.out.println("Cliente NO encontrado 😞!");
-        } catch (Exception e) {
-            System.out.println("Oops ha habido un problema, inténtelo más tarde 😞!");
-        }
-
-    }
-
-    @Transactional(propagation = Propagation.REQUIRED)
-    public void add(String[] args) {
-        System.out.println("\nAñadiendo cliente");
-        System.out.println("───────────────────────────────────");
-        try {
-            Cliente cl = ClientesUtils.extractClientFromArgsForCreate(args);
-            clientesRepo.save(cl);
-            System.out.println("Cliente añadido: " + cl + " 🙂");
-            mostrarLista();
-        } catch (ClienteException e) {
-            System.out.println("Cliente NO válido 😞! \nCode: " + e.getCode());
-        } catch (DateTimeException e) {
-            System.out.println("⚠ LAS FECHAS DEBEN TENER EL FORMATO yyyy-mm-dd, por ejemplo 2023-12-01 ⚠");
-        } catch (Exception e) {
-            //System.out.println("Oops ha habido un problema, inténtelo más tarde 😞!");
-            System.out.println("Cliente NO válido 😞!");
-            e.printStackTrace();
-        }
-
-    }
-
-    @Transactional(propagation = Propagation.REQUIRED)
-    public void eliminar(Integer uid) {
-        System.out.println("\nBorrando cliente: " + uid);
-        System.out.println("───────────────────────────────────");
-
-        try {
-            clientesRepo.deleteById(uid);
-            System.out.println("Cliente borrado 🙂!!");
-            //this.mostrarLista();
-        } catch (Exception e) {
-            System.out.println("Cliente NO encontrado\n");
-        }
-        //} catch (ClienteException e) {
-        //    System.out.println("Cliente NO encontrado 😞! \nCode: " + e.getCode());
-        //} catch (Exception e) {
-        //    System.out.println("Oops ha habido un problema, inténtelo más tarde 😞!");
-        //}
-
-    }
-
-    @Transactional(propagation = Propagation.REQUIRED)
-    public void actualizar(Integer uid, String[] args) {
-        System.out.println("\nActualizando cliente: " + uid);
-        System.out.println("───────────────────────────────────");
-
-        try {
-            Cliente cl = clientesRepo.findClienteById(uid);
-            System.out.println("cl.getClass():" + cl.getClass() + " " + cl);
-            ClientesUtils.updateClientFromArgs(cl, args);
-            clientesRepo.save(cl);
-            System.out.println("Cliente actualizado 🙂!!");
-            System.out.println(cl);
-            //this.mostrarLista();
-        } catch (ClienteException e) {
-            System.out.println("Cliente NO encontrado 😞! \nCode: " + e.getCode());
-        } catch (DateTimeException e) {
-            System.out.println("⚠ LAS FECHAS DEBEN TENER EL FORMATO yyyy-mm-dd, por ejemplo 2023-12-01 ⚠");
-        } catch (Exception e) {
-            System.out.println("Oops ha habido un problema, inténtelo más tarde 😞!");
-            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
-    public void evaluarPrestamo(Integer uid, Double cantidad) {
-        System.out.println("\nEvaluando préstamos de " + cantidad + " EUR para el  cliente: " + uid);
-        System.out.println("───────────────────────────────────");
-
-        try {
-            Cliente cliente = clientesRepo.findClienteById(uid);
-            System.out.println("Saldo total del cliente: " + cliente.obtenerSaldoTotal());
-            int numPrestamos = cliente.getPrestamos() != null ? cliente.getPrestamos().size() : 0;
-            System.out.println("Número total de préstamos del cliente: " + numPrestamos);
-
-            Prestamo prestamoSolictado = new Prestamo(null, LocalDate.now(), cantidad, cantidad, 10, 5, false, false, 5);
-
-            boolean aceptable = cliente.evaluarSolicitudPrestamo(prestamoSolictado);
-            if (aceptable) System.out.println("SÍ se puede conceder 🙂!!");
-            else System.out.println("NO puede conceder 😞!! Saldo insuficiente.");
-
-        } catch (ClienteException e) {
-            System.out.println("Cliente NO encontrado 😞! \nCode: " + e.getCode());
-        } catch (Exception e) {
-            System.out.println("Oops ha habido un problema, inténtelo más tarde 😞!");
-            e.printStackTrace();
-        }
-
-
+    // Método POST (Crear Cliente 'save')       * NO FUNCIONA ?
+    @Operation(summary = "Create a new client", description = "Create a new client")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Created"),
+            @ApiResponse(responseCode = "422", description = "Unprocessable Entity")
+    })
+    @PostMapping(value = "", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public ResponseEntity<Cliente> save(@RequestBody @Valid Cliente newCliente) {
+        logger.info("newCliente:" + newCliente);
+        return new ResponseEntity<>(clientesRepo.save(newCliente), HttpStatus.CREATED);
     }
 
-    public void setClientesRepo(IClientesRepoData clientesRepo) {
-        this.clientesRepo = clientesRepo;
+    // Método PUT (Actualizar Cuenta por ID y Cliente 'updateCliente'       * NO FUNCIONA ?
+    @Operation(summary = "Update a client by id", description = "Update a client selected by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "202", description = "Accepted"),
+    })
+    @PutMapping("/{id}")
+    public ResponseEntity<Cliente> update(
+            @PathVariable @Min(1) Integer id,
+            @RequestBody Cliente cliente
+    ) throws ClienteNotFoundException {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(clientesController.updateCliente(id, cliente));
     }
+
+    // Método DELETE (Borrar Cuenta por ID 'delete')
+    @Operation(summary = "Delete a client by id", description = "Removes a client as per the id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "No Content"),
+            @ApiResponse(responseCode = "404", description = "Not Found - The client was not found")
+    })
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteId(
+            @Parameter(name = "id", description = "Cliente id", example = "1", required = true)
+            @PathVariable @Min(1) Integer id
+    ) {
+        //this.clientesRepo.deleteById(id); // HTTP 204 No Content
+        this.clientesController.eliminar(id); // HTTP 204 No Content
+        return ResponseEntity.noContent().build();
+    }
+
+    // Método DELETE (Borrar Todas las Cuentas 'deleteAll')
+    @Operation(summary = "Delete all clients", description = "Removes all clients from the application")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "No Content")
+    })
+    @RequestMapping(value = "", method = RequestMethod.DELETE)
+    public ResponseEntity deleteAll() {
+        clientesRepo.deleteAll(); // HTTP 204 No Content
+        return ResponseEntity.noContent().build();
+    }
+
 }

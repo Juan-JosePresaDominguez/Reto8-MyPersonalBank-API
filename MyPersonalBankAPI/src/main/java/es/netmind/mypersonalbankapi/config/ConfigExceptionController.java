@@ -15,16 +15,15 @@ import java.util.Map;
 
 @RestControllerAdvice // Maneja las excepciones globalmente
 public class ConfigExceptionController {
-    /*ExceptionHandler(value = ProductNotfoundException.class)
-    public ResponseEntity<Object> exception(ProductNotfoundException exception) {
-        return new ResponseEntity<>("Product not found", HttpStatus.NOT_FOUND);
-    }*/
+
+    //Capturador de Excepciones
     @ExceptionHandler(value = ClienteNotFoundException.class)
-    public ResponseEntity<Object> handleProductNotfoundException(ClienteNotFoundException exception) {
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+    public ResponseEntity<Object> handleClienteNotfoundException(ClienteNotFoundException exception) {
+        //return new ResponseEntity<>("Cliente not found", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND); // Muestra el mensaje que le envía la excepción de ClientesControllerAPI.
     }
 
-    @ResponseStatus(HttpStatus.PRECONDITION_FAILED)
+    @ResponseStatus(HttpStatus.PRECONDITION_FAILED) // HTTP 412
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
@@ -39,7 +38,7 @@ public class ConfigExceptionController {
     @ExceptionHandler(ConstraintViolationException.class)
 //    @ResponseStatus(HttpStatus.BAD_REQUEST)
     ResponseEntity<String> handleConstraintViolationException(ConstraintViolationException e) {
-        return new ResponseEntity<>("not valid due to validation error: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Not valid due to validation error: " + e.getMessage(), HttpStatus.BAD_REQUEST); // HTTP 400
     }
 
 }

@@ -3,6 +3,7 @@ package es.netmind.mypersonalbankapi.modelos.clientes;
 import lombok.*;
 
 import javax.persistence.Entity;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 import java.util.Arrays;
 
@@ -13,6 +14,7 @@ import java.util.Arrays;
 @ToString
 @Entity
 public class Empresa extends Cliente {
+    @Pattern(regexp = "[0-9]{8}-[A-Z]{1}")   // 12345678
     private String cif;
     private String[] unidadesNegocio;
 
