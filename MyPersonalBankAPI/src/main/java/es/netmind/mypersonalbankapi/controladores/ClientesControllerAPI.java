@@ -86,13 +86,26 @@ public class ClientesControllerAPI {
     public ResponseEntity<Cliente> getCliente(
             @Parameter(name = "id", description = "Cliente id", example = "1", required = true)
             @PathVariable @Min(1) Integer id
-    ) throws Exception {
+    ) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(clientesRepo.findClienteById(id));
+            return ResponseEntity.status(HttpStatus.OK).body(clientesController.mostrarDetalleCliente(id));
         } catch (ClienteNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+        /* La excepción de cliente no encontrado NO se controla aquí, sino en el método mostrarDetalleCliente() de ClientesController. Es la forma más correcta de implementarlo para evitar el anidamiento de if-else. */
     }
+    /* Método equivalente (IF-ELSE), controlando la excepción en la propia clase 'ClientesControllerAPI.java' */
+    /*public ResponseEntity<Cliente> getCliente(
+            @Parameter(name = "id", description = "Cliente id", example = "1", required = true)
+            @PathVariable @Min(1) Integer id
+    ) throws Exception {
+        Cliente cliente = clientesRepo.findClienteById(id);
+        if (cliente != null && cliente.validar())
+            return new ResponseEntity<>(clientesRepo.findClienteById(id), HttpStatus.OK); // HTTP 200
+        //else return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        else throw new ClienteNotFoundException(id); // HTTP 404 + Excepción: 'Cliente con id: X no encontrado'
+    }*/
+
 
     // Método POST (Crear Cliente Personal 'createPersonal')
     @Operation(summary = "Create a new Personal client", description = "Create a new Personal client")

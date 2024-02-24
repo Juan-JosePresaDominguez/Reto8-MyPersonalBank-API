@@ -65,7 +65,12 @@ public class ClientesController implements IClientesController {
         } catch (Exception e) {
             System.out.println("Oops ha habido un problema, inténtelo más tarde 😞!");
         }
+    }
 
+    public Cliente mostrarDetalleCliente(Integer uid) throws ClienteNotFoundException {
+        /* La excepción de cliente no encontrado se controla aquí, no en el método getCliente() de la API */
+        Cliente cliente = clientesRepo.findById(uid).orElseThrow(() -> new ClienteNotFoundException(uid));
+        return cliente;
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
