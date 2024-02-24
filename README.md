@@ -3,8 +3,8 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/Juan-JosePresaDominguez/Reto8-MyPersonalBank-API/MyPersonalBankAPI">
-    <img src="docs/API REST.png" alt="Logo" width="80" height="80">
+  <a href="https://github.com/Juan-JosePresaDominguez/Reto8-MyPersonalBank-API">
+    <img src="MyPersonalBankAPI/docs/API REST.png" alt="Logo">
   </a>
   <!-- <h3 align="center">API REST</h3> -->
 </div>
