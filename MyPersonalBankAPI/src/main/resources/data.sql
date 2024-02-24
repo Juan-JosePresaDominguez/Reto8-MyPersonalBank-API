@@ -46,9 +46,9 @@ INSERT INTO cliente (dtype, activo, alta, direccion, email, moroso, nombre, cif,
 --
 -- Dumping data for table 'prestamo'
 --
---INSERT INTO prestamo (id, anios, fecha_concesion, interes, interes_mora, liquidado, mensualidad, monto, moroso, saldo, cliente_id) VALUES
---(1, 2, '2023-11-07', 4, 2, FALSE, NULL, 1000, FALSE, 1000, 1),
---(2, 25, '2023-11-07', 4, 2, FALSE, NULL, 100000, FALSE, 100000, 3);
+INSERT INTO prestamo (id, anios, fecha_concesion, interes, interes_mora, liquidado, mensualidad, monto, moroso, saldo, cliente_id) VALUES
+(1, 2, '2023-11-07', 4, 2, FALSE, NULL, 1000, FALSE, 1000, 1),
+(2, 25, '2023-11-07', 4, 2, FALSE, NULL, 100000, FALSE, 100000, 3);
 
 
 -- NOTAS:

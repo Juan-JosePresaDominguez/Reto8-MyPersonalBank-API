@@ -60,6 +60,7 @@ public abstract class Cliente {
     @Schema(name = "Cliente cuentas", type = "List<Cuenta>", required = false)
     private List<Cuenta> cuentas;
     //@Transient
+    @JsonIgnore
     @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER, mappedBy = "myCliente")
 //    @JoinColumn(name = "cliente_id")
 //    @ToString.Exclude   //Evitar bucles infinitos
