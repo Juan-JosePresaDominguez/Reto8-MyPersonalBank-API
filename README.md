@@ -1,3 +1,14 @@
+# <h1 align="center">💻 Reto8-MyPersonalBank-API 💻</h1>
+
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+  <a href="https://github.com/Juan-JosePresaDominguez/Reto8-MyPersonalBank-API/MyPersonalBankAPI">
+    <img src="docs/API REST.png" alt="Logo" width="80" height="80">
+  </a>
+  <!-- <h3 align="center">API REST</h3> -->
+</div>
+
 "# Reto8-MyPersonalBank-API" 
 
 EQUIPO 2
