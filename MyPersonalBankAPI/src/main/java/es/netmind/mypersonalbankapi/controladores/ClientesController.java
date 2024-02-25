@@ -1,6 +1,7 @@
 package es.netmind.mypersonalbankapi.controladores;
 
 import es.netmind.mypersonalbankapi.exceptions.ClienteException;
+
 import es.netmind.mypersonalbankapi.exceptions.ClienteNotFoundException;
 import es.netmind.mypersonalbankapi.modelos.clientes.Cliente;
 import es.netmind.mypersonalbankapi.modelos.clientes.Empresa;
@@ -13,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.List;
@@ -58,7 +58,7 @@ public class ClientesController implements IClientesController {
         System.out.println("───────────────────────────────────");
 
         try {
-            Cliente cl = clientesRepo.findById(uid).orElseThrow(()->new ClienteNotFoundException());
+            Cliente cl = clientesRepo.findById(uid).orElseThrow(() -> new ClienteNotFoundException());
             System.out.println(cl);
         } catch (ClienteNotFoundException e) {
             System.out.println("Cliente NO encontrado 😞!");
@@ -165,7 +165,7 @@ public class ClientesController implements IClientesController {
 
     @Override
     public Personal updatePersonal(Integer id, Personal personal) throws ClienteNotFoundException {
-        Personal newPersonal = (Personal)clientesRepo.findById(id).orElseThrow(() -> new ClienteNotFoundException(id));
+        Personal newPersonal = (Personal) clientesRepo.findById(id).orElseThrow(() -> new ClienteNotFoundException(id));
         newPersonal.setNombre(personal.getNombre());
         newPersonal.setEmail(personal.getEmail());
         newPersonal.setDireccion(personal.getDireccion());
@@ -179,7 +179,7 @@ public class ClientesController implements IClientesController {
 
     @Override
     public Empresa updateEmpresa(Integer id, Empresa empresa) throws ClienteNotFoundException {
-        Empresa newEmpresa = (Empresa)clientesRepo.findById(id).orElseThrow(() -> new ClienteNotFoundException(id));
+        Empresa newEmpresa = (Empresa) clientesRepo.findById(id).orElseThrow(() -> new ClienteNotFoundException(id));
         newEmpresa.setNombre(empresa.getNombre());
         newEmpresa.setEmail(empresa.getEmail());
         newEmpresa.setDireccion(empresa.getDireccion());

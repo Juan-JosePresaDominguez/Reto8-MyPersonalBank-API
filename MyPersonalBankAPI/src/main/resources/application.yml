@@ -18,7 +18,7 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: create-drop
-      #ddl-auto: update  # Para no tener que cargar manualmente la BB.DD. en cada ejecuciÛn NO FUNCIONA
+      #ddl-auto: update  # Para no tener que cargar manualmente la BB.DD. en cada ejecuci√≥n NO FUNCIONA
       generate-ddl: true
     defer-datasource-initialization: true
   h2:
@@ -50,7 +50,7 @@ spring:
     show-sql: true
     database-platform: org.hibernate.dialect.MySQL5Dialect
     hibernate:
-      # No utilizar 'create-drop' en producciÛn. Eliminar· su base de datos despuÈs de que se detenga la aplicaciÛn.
+      # No utilizar 'create-drop' en producci√≥n. Eliminar√° su base de datos despu√©s de que se detenga la aplicaci√≥n.
       ddl-auto: update
       generate-ddl: true
     defer-datasource-initialization: true
@@ -65,4 +65,3 @@ server:
     keyAlias: tomcat
 
 security.require-ssl: true
-
