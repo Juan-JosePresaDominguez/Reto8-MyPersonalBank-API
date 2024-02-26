@@ -17,7 +17,7 @@ public interface IClientesRepoData extends JpaRepository<Cliente, Integer> {
     public List<Cliente> getAll() throws Exception;
 
     // COMENTARIOS RICARDO:
-    /*- El método findAll no hace falta declararlo en la interface que extiende JPSRepository, ya que ya existe en la propia interface.
-    - El método findClienteById, se puede reemplazar por el findById, que ya existe. En general, como estamos en JPSRepository de Cliente, no hace falta añadir Cliente en el nombre de los métodos.
+    /*- El método findAll no hace falta declararlo en la interface que extiende JPARepository, ya que ya existe en la propia interface.
+    - El método findClienteById, se puede reemplazar por el findById, que ya existe. En general, como estamos en JPARepository de Cliente, no hace falta añadir Cliente en el nombre de los métodos.
     - El método getAll está bien como experimento/prueba.*/
 }

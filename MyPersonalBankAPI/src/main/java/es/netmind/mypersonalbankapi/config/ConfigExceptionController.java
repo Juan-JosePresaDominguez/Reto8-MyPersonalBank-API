@@ -2,6 +2,7 @@ package es.netmind.mypersonalbankapi.config;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import es.netmind.mypersonalbankapi.exceptions.ClienteNotFoundException;
+import es.netmind.mypersonalbankapi.exceptions.PrestamoNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -25,6 +26,13 @@ public class ConfigExceptionController {
         System.out.println(">>> EXCEPCIÓN: ClienteNotFoundException");
         //return new ResponseEntity<>("Cliente not found", HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND); // Muestra el mensaje que le envía la excepción de ClientesControllerAPI.
+    }
+
+    @ExceptionHandler(value = PrestamoNotFoundException.class)
+    public ResponseEntity<Object> handlePrestamoNotfoundException(PrestamoNotFoundException exception) {
+        System.out.println(">>> EXCEPCIÓN: PrestamoNotFoundException");
+        //return new ResponseEntity<>("Prestamo not found", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND); // Muestra el mensaje que le envía la excepción de PrestamosControllerAPI.
     }
 
     @ExceptionHandler(value = JsonMappingException.class)

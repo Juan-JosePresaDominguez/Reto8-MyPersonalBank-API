@@ -7,9 +7,14 @@ import es.netmind.mypersonalbankapi.persistencia.ClientesInMemoryRepo;
 import es.netmind.mypersonalbankapi.persistencia.IClientesRepo;
 import es.netmind.mypersonalbankapi.persistencia.IPrestamosRepo;
 import es.netmind.mypersonalbankapi.persistencia.PrestamosInMemoryRepo;
+import lombok.ToString;
+import org.springframework.stereotype.Controller;
 
 import java.util.List;
 
+//@Component
+@Controller
+@ToString
 public class PrestamosController {
     private static IPrestamosRepo prestamosRepo = PrestamosInMemoryRepo.getInstance();
     private static IClientesRepo clientesRepo = ClientesInMemoryRepo.getInstance();

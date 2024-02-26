@@ -40,7 +40,7 @@ public abstract class Cliente {
     @Schema(name = "Cliente email", example = "caixa@c.com", required = true)
     private String email;
 
-    @Schema(name = "Cliente direccion", example = "caixa@c.com", required = true)
+    @Schema(name = "Cliente dirección", example = "BARCELONA", required = true)
     private String direccion;
 
     //@ValidDate  // Anotación de Validación Personalizada
@@ -50,7 +50,7 @@ public abstract class Cliente {
     @Schema(name = "Cliente activo", example = "true", required = true)
     private boolean activo;
 
-    @Schema(name = "Cliente activo", example = "false", required = true)
+    @Schema(name = "Cliente moroso", example = "false", required = true)
     private boolean moroso;
 
     @Transient

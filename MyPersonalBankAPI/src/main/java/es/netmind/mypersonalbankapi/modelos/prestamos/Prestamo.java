@@ -1,9 +1,13 @@
 package es.netmind.mypersonalbankapi.modelos.prestamos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import es.netmind.mypersonalbankapi.modelos.clientes.Cliente;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -13,24 +17,55 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 @Entity
+@Schema(name = "Préstamo", description = "Modelo préstamo")
 public class Prestamo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Min(1)
+    @Schema(name = "Préstamo ID", example = "1", required = false)
     private Integer id;
+
     @Column(name = "fecha_concesion")
+    @Schema(name = "Fecha de concesión", example = "2024-02-26", required = true)
     private LocalDate fechaConcesion;
-    private Double monto;
+
+    @Schema(name = "Monto", type = "Double", required = true)
+    private Double monto; /* Valor futuro: Suma del capital más el interés. */
+
+    @Schema(name = "Saldo", type = "Double", required = true)
     private Double saldo;
+
+    @Schema(name = "Mensualidad", type = "Double", required = true)
     private Double mensualidad;
+
+    @Min(1)
+    @Max(50)
+    @Schema(name = "Años préstamo", type = "Integer", required = true)
     private Integer anios;
+
     @Transient
+    @JsonIgnore
+    @Schema(name = "Préstamo pagos", type = "List<Pago>", required = false)
     private List<Pago> pagos;
+
     @Transient
+    @JsonIgnore
+    @Schema(name = "Préstamo moras", type = "List<Mora>", required = false)
     private List<Mora> moras;
+
+    @Min(0)
+    @Schema(name = "Interés", type = "Integer", required = true)
     private Integer interes;
+
     @Column(name = "interes_mora")
+    @Min(0)
+    @Schema(name = "Interés mora", type = "Integer", required = true)
     private Integer interesMora;
+
+    @Schema(name = "Préstamo moroso", example = "true", required = true)
     private boolean moroso;
+
+    @Schema(name = "Préstamo liquidado", example = "false", required = true)
     private boolean liquidado;
 
     @ManyToOne(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
