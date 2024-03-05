@@ -85,6 +85,7 @@ public class ClientesControllerAPI {
     })
     @GetMapping(value = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<Cliente> getCliente(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(required = true, description = "Client data")
             @Parameter(name = "id", description = "Cliente id", example = "1", required = true)
             @PathVariable @Min(1) Integer id
     ) {
@@ -145,6 +146,7 @@ public class ClientesControllerAPI {
     @PutMapping("/personal/{id}")
     public ResponseEntity<Personal> update(
             @PathVariable @Min(1) Integer id,
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(required = true, description = "Personal data")
             @RequestBody @Valid Personal personal
     ) throws ClienteNotFoundException {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(clientesController.updatePersonal(id, personal));
@@ -163,6 +165,7 @@ public class ClientesControllerAPI {
     @PutMapping("/empresa/{id}")
     public ResponseEntity<Empresa> update(
             @PathVariable @Min(1) Integer id,
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(required = true, description = "Empresa data")
             @RequestBody @Valid Empresa empresa
     ) throws ClienteNotFoundException {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(clientesController.updateEmpresa(id, empresa));
